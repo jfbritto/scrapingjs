@@ -2,6 +2,27 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const express = require('express');
 const path = require('path');
+const http = require('http');
+const fs = require('fs');
+const mime = require('mime');
+
+const server = http.createServer((req, res) => {
+  const filePath = './index.js';
+  const mimeType = mime.getType(filePath);
+
+  res.writeHead(200, { 'Content-Type': mimeType });
+
+  fs.readFile(filePath, (error, data) => {
+    if (error) {
+      console.error('Erro ao ler o arquivo:', error);
+      res.statusCode = 500;
+      res.end('Ocorreu um erro ao processar a requisição.');
+    } else {
+      res.end(data);
+    }
+  });
+});
+
 
 const app = express();
 
